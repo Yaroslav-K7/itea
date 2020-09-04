@@ -18,17 +18,17 @@ class Point:
     def get_x(self):
         return self.x
 
-    def change_x(self, new_x):
+    def set_x(self, new_x):
         self.x = new_x
 
     def get_y(self):
         return self.y
 
-    def change_y(self, new_y):
+    def set_y(self, new_y):
         self.y = new_y
 
     def get_z(self):
         return self.z
 
-    def change_z(self, new_z):
+    def set_z(self, new_z):
         self.z = new_z
