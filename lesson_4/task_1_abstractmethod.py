@@ -3,7 +3,6 @@ from datetime import datetime
 
 
 class Person(ABC):
-    all_person = []
 
     @abstractmethod
     def get_info_about_person(self):
@@ -21,9 +20,8 @@ class Enrollee(Person):
         self.date_of_birthday = date_of_birthday
         self.faculty = faculty
 
-
     def get_info_about_person(self):
-        return f'Enrollee: {self.surname} has birthday {self.date_of_birthday}, faculty - {self.faculty}'
+        return f'Enrollee: {self.surname} has birthday {self.date_of_birthday}, faculty: {self.faculty}'
 
     def get_years(self):
         symbols = [',', ';', ':', '/', '-']
@@ -40,10 +38,9 @@ class Student(Enrollee):
         super().__init__(surname, date_of_birthday, faculty)
         self.course = course
 
-
     def get_info_about_person(self):
         return f'Student: {self.surname} has birthday {self.date_of_birthday}, ' \
-               f'faculty - {self.faculty}, course -{self.course}'
+               f'faculty: {self.faculty}, course: {self.course}'
 
 
 class Teacher(Enrollee):
@@ -53,6 +50,32 @@ class Teacher(Enrollee):
         self.experience = experience
 
     def get_info_about_person(self):
-        return f'Student: {self.surname} has birthday {self.date_of_birthday}, ' \
-               f'faculty - {self.faculty}, position - {self.position}, experience -{self.experience}'
+        return f'Teacher: {self.surname} has birthday {self.date_of_birthday}, ' \
+               f'faculty: {self.faculty}, position: {self.position}, experience: {self.experience}'
 
+
+list_of_person = [Enrollee('Kuznietsov', '1994:04:07', 'DOIT'),
+        Student('Mark', '1984:03:16', 'DOIT', '1'),
+        Teacher('Spilberg', '1974:05:16', 'DOIT', 'BIOLOGY', 10)]
+
+for x in list_of_person:
+    print(x.get_info_about_person())
+
+
+year_from = int(input("year range from: "))
+year_to = int(input("year range to "))
+
+range_of_years_from_to = []
+persons_years = []
+
+for i in range(year_from, year_to):
+    range_of_years_from_to.append(i)
+
+for z in list_of_person:
+    persons_years.append((z.get_years(), z.get_info_about_person()))
+
+dict_persons_years = dict(persons_years)
+
+for g in dict_persons_years.keys():
+    if g in range_of_years_from_to:
+        print(dict_persons_years[g])
