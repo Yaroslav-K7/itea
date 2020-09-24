@@ -38,7 +38,7 @@ class User:
             )
             self.is_authorised = True
         else:
-            self.is_authorised = False
+            raise Exception("You aren't authorised")
 
     def login(self):
         user = [user for user in ALL_USERS if user['login'] == self.username][0]
@@ -50,10 +50,13 @@ class User:
             else:
                 self.is_authorised = True
         else:
-            self.is_authorised = False
+            raise Exception("You aren't login")
 
     def logout(self):
-        self.is_authorised = False
+        if self.is_authorised:
+            self.is_authorised = False
+        else:
+            raise Exception("You aren't login")
 
     def create_post(self, post):
         if self.is_authorised:
@@ -100,12 +103,17 @@ if login_input not in usernames:
 else:
     for i in range(3):
         password_input = input("Enter your password: ")
-        user = User(login_input, password_input)
-        user.login()
-        post_input = input("Write your post: ")
-        user.create_post(post_input)
-        user.get_all_information_about_users()
-        break
+        try:
+            user = User(login_input, password_input)
+            user.login()
+        except Exception:
+            print(f"Your tries {i+1}/3")
+            continue
+        else:
+            post_input = input("Write your post: ")
+            user.create_post(post_input)
+            user.get_all_information_about_users()
+            break
 
     else:
         print("Password attempts ended")
