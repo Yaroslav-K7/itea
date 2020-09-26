@@ -5,7 +5,7 @@ import shelve
 FILENAME = "DICT.DB"
 
 db = shelve.open(FILENAME)
-db['Yarik'] = {'password': '12345Qwe!', 'post': 'lflf', 'is_admin': True}
+db['Yarik'] = {'password': '12345Qwe!', 'is_admin': True, 'register_time:': '2020-09-22 18:31:10', 'Posts': []}
 
 
 class User:
@@ -34,7 +34,7 @@ class User:
     def register(self):
         if self.is_password_match_requirements(self.password_):
             db.update({self.username: {"password": self.password_,
-                                       "register_time:": datetime.now().strftime("%Y-%m-%d %H:%M:%S")}}
+                                       "register_time:": datetime.now().strftime("%Y-%m-%d %H:%M:%S"), 'Posts': []}}
                       )
             self.is_authorised = True
         else:
@@ -42,7 +42,6 @@ class User:
 
     def login(self):
         user = db[self.username]
-        print(user)
         correct_password = user.get('password')
         if self.is_password_correct(self.password_, correct_password):
             if user.get('is_admin'):
@@ -61,11 +60,9 @@ class User:
 
     def create_post(self, post):
         if self.is_authorised:
-            pass
-            # a = {'post': post, 'post_time': datetime.now().strftime("%Y-%m-%d %H:%M:%S")}
-
-            # db[user].update({'post': post, 'post_time': datetime.now().strftime("%Y-%m-%d %H:%M:%S")})
-            # db[user]({self.username: {'post': post, 'post_time': datetime.now().strftime("%Y-%m-%d %H:%M:%S")}})
+            change_post = db[self.username]
+            change_post["Posts"] = {'post': post, 'post_time': datetime.now().strftime("%Y-%m-%d %H:%M:%S")}
+            db[self.username]["Posts"].append(change_post["Posts"])
         else:
             raise Exception("You don't have a permission")
 
