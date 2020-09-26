@@ -1,6 +1,6 @@
-from datetime import datetime
 import re
 import shelve
+from datetime import datetime
 
 FILENAME = "DICT.DB"
 
@@ -60,9 +60,10 @@ class User:
 
     def create_post(self, post):
         if self.is_authorised:
-            change_post = db[self.username]
-            change_post["Posts"] = {'post': post, 'post_time': datetime.now().strftime("%Y-%m-%d %H:%M:%S")}
-            db[self.username]["Posts"].append(change_post["Posts"])
+            get_user = db[self.username]
+            users_posts = get_user["Posts"]
+            users_posts.append({'post': post, 'post_time': datetime.now().strftime("%Y-%m-%d %H:%M:%S")})
+            db[self.username] = get_user
         else:
             raise Exception("You don't have a permission")
 
@@ -77,6 +78,7 @@ class User:
 
 login_input = input("Enter login: ")
 usernames = list(db.keys())
+
 if login_input not in usernames:
     print("Redirection to registration")
     for i in range(3):
@@ -91,16 +93,19 @@ if login_input not in usernames:
         res = re.search(match_re, password_input)
         if not res:
             print("Incorrect password")
+
         else:
             repeat_password_input = input('Repeat your password: ')
             if password_input == repeat_password_input:
                 user = User(login_input, password_input)
                 user.register()
                 break
+
             else:
                 continue
 
         print(f"Your tries {i + 1}/3")
+
 else:
     for i in range(3):
         password_input = input("Enter your password: ")
@@ -113,13 +118,10 @@ else:
         else:
             post_input = input("Write your post: ")
             user.create_post(post_input)
-            # user.get_all_information_about_users()
+            user.get_all_information_about_users()
             break
 
     else:
         print("Password attempts ended")
 
 db.close()
-
-with shelve.open(FILENAME) as db:
-    print(list(db.items()))
