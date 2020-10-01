@@ -28,30 +28,28 @@ def ten():
 
 
 "--------------------------------------------------------------------"
-ten_urls = ['https://rcnit.com.ua/wp-content/uploads/2016/10/qa.jpg',
-            'https://images.wallpaperscraft.ru/image/mashina_sportkar_neon_157154_1280x720.jpg',
-            'https://images.wallpaperscraft.ru/image/mashina_sportkar_neon_156622_300x188.jpg',
-            'https://images.wallpaperscraft.ru/image/mashina_sportkar_doroga_156423_300x188.jpg',
-            'https://images.wallpaperscraft.ru/image/rollsroyce_vid_speredi_fary_136993_1280x720.jpg',
-            'https://rcnit.com.ua/wp-content/uploads/2016/10/qa.jpg',
-            'https://images.wallpaperscraft.ru/image/mashina_sportkar_neon_157154_1280x720.jpg',
-            'https://images.wallpaperscraft.ru/image/mashina_sportkar_neon_156622_300x188.jpg',
-            'https://images.wallpaperscraft.ru/image/mashina_sportkar_doroga_156423_300x188.jpg',
-            'https://images.wallpaperscraft.ru/image/rollsroyce_vid_speredi_fary_136993_1280x720.jpg'
-            ]
+urls = ['https://rcnit.com.ua/wp-content/uploads/2016/10/qa.jpg',
+        'https://images.wallpaperscraft.ru/image/mashina_sportkar_neon_157154_1280x720.jpg',
+        'https://images.wallpaperscraft.ru/image/mashina_sportkar_neon_156622_300x188.jpg',
+        'https://images.wallpaperscraft.ru/image/mashina_sportkar_doroga_156423_300x188.jpg',
+        'https://images.wallpaperscraft.ru/image/rollsroyce_vid_speredi_fary_136993_1280x720.jpg',
+        'https://rcnit.com.ua/wp-content/uploads/2016/10/qa.jpg',
+        'https://images.wallpaperscraft.ru/image/mashina_sportkar_neon_157154_1280x720.jpg',
+        'https://images.wallpaperscraft.ru/image/mashina_sportkar_neon_156622_300x188.jpg',
+        'https://images.wallpaperscraft.ru/image/mashina_sportkar_doroga_156423_300x188.jpg',
+        'https://images.wallpaperscraft.ru/image/rollsroyce_vid_speredi_fary_136993_1280x720.jpg'
+        ]
 
 
 def name_of_threads_():
     def actual_decorator(func):
-        @wraps(func)
-        def wrapper():
-            for url in ten_urls:
-                name = randint(0, 100)
-                print(f"Thread starting, {url}")
-                start = time.time()
-                thread = Thread(target=func(url, name), args=(url,))
-                thread.start()
-                print(f"Thread end. Time: {time.time() - start}")
+        def wrapper(*args, **kwargs):
+            print(f"Thread starting - {args}")
+            start = time.time()
+            Thread(target=func, args=args, kwargs=kwargs).start()
+            print(f"Thread end. Time: {time.time() - start}")
+
+            return func
 
         return wrapper
 
@@ -59,7 +57,13 @@ def name_of_threads_():
 
 
 @name_of_threads_()
-def ten_(url, name):
+def download_and_save(url, name):
     save_file = requests.get(url)
-    with open(f'new_image{name}.jpg', 'wb') as f:
+    with open(name, 'wb') as f:
         f.write(save_file.content)
+
+
+for u in urls:
+    download_and_save(u, f'{randint(0, 1000)}.jpg')
+
+
