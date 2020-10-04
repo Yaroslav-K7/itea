@@ -19,15 +19,16 @@ def get_content(html):
     soup = BeautifulSoup(html, "html.parser")
     item = soup.find_all("div", class_="main loaded")
 
-    day = []
+    weather = []
     for it in item:
-        day.append({
+        weather.append({
             "day": it.find("p", class_="date").get_text(strip=True),
             "month": it.find("p", class_="month").get_text(strip=True),
             "weather": it.find("div", class_="weatherIco").get("title"),
             "min_temp": it.find("div", class_="min").get_text(strip=True),
             "max_temp": it.find("div", class_="max").get_text(strip=True)
         })
+    return weather
 
 
 def parse():
